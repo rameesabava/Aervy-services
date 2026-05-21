@@ -10,7 +10,7 @@ function Footer() {
             <div className='py-10 px-20 text-sm'>
                 {/* icon */}
                 <div className='font-semibold text-sm text-amber-700 flex'>
-                    <img src="/icon.png" alt="icon" className='h-5 w-5 me-2' />
+                    <img src="/icon.png" alt="icon" className='h-5 w-5 me-2 bg-white' />
                     AERVY SERVICES PLATFORM</div>
                 <div className='md:flex justify-between mt-5'>
                     <div>
@@ -33,11 +33,13 @@ function Footer() {
 
                     <div>
                         <h2 className='text-amber-600 pb-3'>Company</h2>
-                        <p className='text-gray-400 pb-2'>About Us</p>
-                        <p className='text-gray-400 pb-2'>Contact Us</p>
-                        <p className='text-gray-400 pb-2'>Privacy Policy</p>
-                        <p className='text-gray-400 pb-2'>Terms of Service</p>
-                        <Link to={'/provider'} className='text-gray-400 pb-2'>Become a Provider</Link>
+                        <div className='flex flex-col'>
+                            <Link to={'/about'} className='text-gray-400 pb-2'>About Us</Link>
+                            <Link to={'/contact'} className='text-gray-400 pb-2'>Contact Us</Link>
+                            <Link className='text-gray-400 pb-2'>Privacy Policy</Link>
+                            <Link className='text-gray-400 pb-2'>Terms of Service</Link>
+                            <Link to={'/provider'} className='text-gray-400 pb-2'>Become a Provider</Link>
+                        </div>
                     </div>
                 </div>
                 <hr className='my-5 border border-gray-800' />
@@ -47,7 +49,10 @@ function Footer() {
                     </div>
                     {/* icons */}
                     <div className='hidden md:flex items-center gap-3 text-lg'>
-                        <FaInstagram/> <FaXTwitter /> <FaFacebook /> <FaLinkedin />
+                       <Link to={'https://www.instagram.com'}> <FaInstagram/></Link> 
+                       <Link to={'https://x.com/?lang=en-in'}><FaXTwitter /> </Link>
+                       <Link to={'https://www.facebook.com'}><FaFacebook /></Link> 
+                       <Link to={'https://www.linkedin.com/'}><FaLinkedin /></Link>
                     </div>
                 </div>
             </div>

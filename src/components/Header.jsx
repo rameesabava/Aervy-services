@@ -14,9 +14,9 @@ function Header() {
 
       <div className='flex justify-center'>
         {/* links */}
-        <Link to={'/'} className='me-3 hover:text-amber-700'>Home</Link>
-        <Link to={'/about'} className='me-3 hover:text-amber-700'>About</Link>
-        <Link to={'/contact'} className='hover:text-amber-700'>Contact</Link>
+        <Link to={'/'} className='me-3 hover:text-amber-700 outline-none focus:outline-none'>Home</Link>
+        <Link to={'/about'} className='me-3 hover:text-amber-700 outline-none focus:outline-none'>About</Link>
+        <Link to={'/contact'} className='hover:text-amber-700 outline-none focus:outline-none'>Contact</Link>
       </div>
 
       {/* search */}
@@ -30,6 +30,8 @@ function Header() {
           <FaSearch />
         </button>
       </div>
+      <Link to={'/login'} className='bg-amber-800 text-white p-1 rounded me-2 text-sm'>Login</Link>
+
     </div>
   )
 }

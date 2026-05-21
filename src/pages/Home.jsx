@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { gsap } from "gsap";
 
 function Home() {
-
   
   return (
     <div style={{ backgroundImage: "url('/background.png')"}} className="h-screen flex flex-col justify-center items-center">
