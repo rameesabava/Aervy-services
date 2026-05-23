@@ -1,38 +1,94 @@
-import React from 'react'
+import React, { useRef } from 'react'
+import { IoMdMail } from "react-icons/io";
+import { TbDeviceLandlinePhone } from "react-icons/tb";
+import { FaLocationDot } from "react-icons/fa6";
+import { FaClock } from "react-icons/fa";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import emailjs from "@emailjs/browser";
+import toast, { Toaster } from "react-hot-toast";
 
 function Contact() {
-  return (
-    <div className="bg-gray-400 min-h-screen text-gray-800 overflow-hidden">
+  const form = useRef(null);
 
+  const formik = useFormik({
+    initialValues: {
+      fullName: "",
+      email: "",
+      phone: "",
+      location: "",
+      message: ""
+    },
+    validationSchema: Yup.object({
+      fullName: Yup.string()
+        .min(3, "Minimum 3 characters")
+        .required("Full name is required"),
+
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required"),
+
+      phone: Yup.string()
+        .matches(/^[0-9]{10}$/, "Phone number must be 10 digits")
+        .required("Phone number is required"),
+
+      location: Yup.string()
+        .min(3, "Minimum 3 characters")
+        .required("Location is required"),
+
+      message: Yup.string()
+        .min(10, "Message should be at least 10 characters")
+        .required("Message is required"),
+    }),
+
+    onSubmit: (values, { resetForm }) => {
+      emailjs.sendForm(
+        import.meta.env.VITE_SERVICE_ID, import.meta.env.VITE_TEMPLATE_ID, form.current, {
+        publicKey: import.meta.env.VITE_PUBLIC_KEY,
+      }
+      )
+        .then(() => {
+          toast.success("Message sent successfully!");
+          resetForm();
+        })
+        .catch((error) => {
+          console.log(error);
+          toast.error("Failed to send message");
+        });
+
+    }
+  })
+  return (
+
+    <div className="bg-gray-400 min-h-screen text-gray-800 overflow-hidden">
+      <Toaster />
       {/* contact section */}
-      <section className="relative bg-cover bg-center" style={{ backgroundImage: "url('/kochi.jpg')" }}>
+      <section className="fixed top-0 left-0 w-full h-screen bg-cover bg-center" style={{ backgroundImage: "url('/kochi.jpg')" }}>
         <div className="absolute inset-0 bg-white/60"></div>
-        <div className="relative max-w-7xl mx-auto px-6 md:px-12 py-16 grid lg:grid-cols-2 gap-10 items-center">
+        <div className="relative max-w-7xl mx-auto px-6 md:px-12 h-full grid lg:grid-cols-2 gap-10 items-center">
 
           {/* Left text content */}
           <div>
-            <p className="text-green-950 font-bold tracking-wide uppercase text-sm mb-4">
-              We'd love to hear from you
-            </p>
+            <p className="text-green-950 font-bold text-lg mb-4">We'd love to hear from you</p>
 
-            <h1 className="text-5xl md:text-7xl font-black leading-tight">
+            <h1 className="text-5xl md:text-7xl font-black">
               Contact <span className="text-amber-700">Aervy</span>
             </h1>
 
             <p className="mt-6 text-lg max-w-xl font-semibold">
-              We’re here to help you find trusted local services in Kochi. Have questions, feedback, or want to become a provider? Reach out anytime.
+              We're here to help you find trusted local services in Kochi. Have questions, feedback, or want to become a provider? Reach out anytime.
             </p>
 
           </div>
 
           {/* Right contact */}
-          <div className="bg-white/80 backdrop-blur-xl shadow-2xl rounded-[35px] p-8 border border-white/40">
+          <div className="bg-white/80 shadow-2xl rounded-[35px] p-8 border border-white/40">
             <h2 className="text-3xl font-bold mb-8">Get in touch</h2>
 
             <div className="space-y-6">
               <div className="flex items-start gap-4">
                 <div className="w-14 h-14 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-600 text-2xl">
-                  ✉
+                  <IoMdMail />
                 </div>
                 <div>
                   <p className="font-semibold">Email Us</p>
@@ -42,16 +98,16 @@ function Contact() {
 
               <div className="flex items-start gap-4">
                 <div className="w-14 h-14 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-600 text-2xl">
-                  ☎
+                  <TbDeviceLandlinePhone />
                 </div>
                 <div>
                   <p className="font-semibold">Call Us</p>
-                  <p className="text-gray-600">+91 98765 43210</p>
+                  <p className="text-gray-600">+91 94978 56371</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <div className="w-14 h-14 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-600 text-2xl">
-                  📍
+                  <FaLocationDot />
                 </div>
                 <div>
                   <p className="font-semibold">Our Location</p>
@@ -61,7 +117,7 @@ function Contact() {
 
               <div className="flex items-start gap-4">
                 <div className="w-14 h-14 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-600 text-2xl">
-                  🕒
+                  <FaClock />
                 </div>
                 <div>
                   <p className="font-semibold">Working Hours</p>
@@ -72,8 +128,9 @@ function Contact() {
           </div>
         </div>
       </section>
-      {/* CONTACT FORM */}
-      <section className="max-w-6xl mx-auto px-6 md:px-10 -mt-8 relative z-10">
+
+      {/* send message form */}
+      <section className="relative w-full mx-auto px-6 md:px-10 z-20 mb-3 mt-[90vh]">
         <div className="bg-white shadow-2xl rounded-[35px] p-8 md:p-12 border border-gray-100">
           <div className="text-center mb-10">
             <h2 className="text-4xl font-bold">Send us a message</h2>
@@ -83,175 +140,60 @@ function Contact() {
             </p>
           </div>
 
-          <form className="space-y-6">
+          <form ref={form} onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid md:grid-cols-2 gap-5">
-              <input
-                type="text"
-                placeholder="Full Name"
-                className="bg-gray-100 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-amber-400"
-              />
 
-              <input
-                type="email"
-                placeholder="Email Address"
-                className="bg-gray-100 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-amber-400"
-              />
-              <input
-                type="text"
-                placeholder="Phone Number"
-                className="bg-gray-100 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-amber-400"
-              />
+              <div>
+                <input name="fullName" value={formik.values.fullName} onChange={formik.handleChange} onBlur={formik.handleBlur} type="text" placeholder="Full Name" className="w-full bg-gray-100 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-amber-400" />
+                {formik.touched.fullName && formik.errors.fullName && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {formik.errors.fullName}
+                  </p>
 
-              <input
-                type="text"
-                placeholder="Service Needed"
-                className="bg-gray-100 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-amber-400"
-              />
+                )}
+              </div>
+              <div>
+                <input name="email" value={formik.values.email} onChange={formik.handleChange} onBlur={formik.handleBlur} type="email" placeholder="Email Address" className="w-full bg-gray-100 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-amber-400" />
+                {formik.touched.email && formik.errors.email && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {formik.errors.email}
+                  </p>
+                )}
+              </div>
+              <div>
+                <input name="phone" value={formik.values.phone} onChange={formik.handleChange} onBlur={formik.handleBlur} type="text" placeholder="Phone Number" className="w-full bg-gray-100 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-amber-400" />
+                {formik.touched.phone && formik.errors.phone && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {formik.errors.phone}
+                  </p>
+                )}
+              </div>
+              <div>
+                <input name="location" value={formik.values.location} onChange={formik.handleChange} onBlur={formik.handleBlur} type="text" placeholder="Location" className="w-full bg-gray-100 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-amber-400" />
+                {formik.touched.location && formik.errors.location && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {formik.errors.location}
+                  </p>
+                )}
+              </div>
+            
             </div>
-
-            <textarea
-              rows="6"
-              placeholder="Your Message"
-              className="w-full bg-gray-100 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-amber-400"
-            ></textarea>
-            <button className="w-full bg-gradient-to-r from-amber-500 to-amber-700 hover:scale-[1.01] transition-all duration-300 text-white font-semibold py-4 rounded-2xl shadow-lg">
+            <div>
+              <textarea name="message" value={formik.values.message} onChange={formik.handleChange} onBlur={formik.handleBlur} rows="3" placeholder="Your Message" className="w-full bg-gray-100 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-amber-400"></textarea>
+              {formik.touched.message && formik.errors.message && (
+                <p className="text-red-500 text-sm mt-1">
+                  {formik.errors.message}
+                </p>
+              )}
+            </div>
+            <button type='submit' className="w-full bg-gradient-to-r from-amber-500 to-amber-700 hover:scale-[1.01] transition-all duration-300 text-white font-semibold py-4 rounded-2xl shadow-lg">
               Send Message
             </button>
+
           </form>
         </div>
       </section>
 
-
-      {/* HELP SECTION */}
-      <section className="max-w-7xl mx-auto px-6 md:px-12 py-20">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold">How can we help you?</h2>
-          <div className="w-24 h-1 bg-amber-500 mx-auto mt-4 rounded-full"></div>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-white rounded-[30px] p-8 shadow-lg hover:-translate-y-2 transition-all duration-300 border border-gray-100">
-            <div className="w-20 h-20 bg-green-100 rounded-3xl flex items-center justify-center text-4xl mb-6">
-              🎧
-            </div>
-            <h3 className="text-2xl font-bold mb-3 text-green-700">
-              Customer Support
-            </h3>
-            <p className="text-gray-600 leading-relaxed">
-              Need help booking a service or have a general query?
-            </p>
-            <button className="mt-6 border border-green-600 text-green-700 px-6 py-3 rounded-2xl hover:bg-green-50 transition-all font-semibold">
-              Chat Support
-            </button>
-          </div>
-          <div className="bg-white rounded-[30px] p-8 shadow-lg hover:-translate-y-2 transition-all duration-300 border border-gray-100">
-            <div className="w-20 h-20 bg-amber-100 rounded-3xl flex items-center justify-center text-4xl mb-6">
-              🛡
-            </div>
-            <h3 className="text-2xl font-bold mb-3 text-amber-700">
-              Become a Provider
-            </h3>
-            <p className="text-gray-600 leading-relaxed">
-              Join Aervy and grow your business locally.
-            </p>
-            <button className="mt-6 border border-amber-600 text-amber-700 px-6 py-3 rounded-2xl hover:bg-amber-50 transition-all font-semibold">
-              Apply Now
-            </button>
-          </div>
-
-          <div className="bg-white rounded-[30px] p-8 shadow-lg hover:-translate-y-2 transition-all duration-300 border border-gray-100">
-            <div className="w-20 h-20 bg-red-100 rounded-3xl flex items-center justify-center text-4xl mb-6">
-              ⚡
-            </div>
-            <h3 className="text-2xl font-bold mb-3 text-red-600">
-              Emergency Services
-            </h3>
-            <p className="text-gray-600 leading-relaxed">
-              Fast response for urgent repairs and assistance.
-            </p>
-            <button className="mt-6 border border-red-500 text-red-600 px-6 py-3 rounded-2xl hover:bg-red-50 transition-all font-semibold">
-              Contact Now
-            </button>
-          </div>
-        </div>
-      </section>
-      {/* COVERAGE SECTION */}
-      <section className="max-w-7xl mx-auto px-6 md:px-12 pb-20">
-        <div className="bg-white rounded-[35px] shadow-2xl overflow-hidden grid lg:grid-cols-2 border border-gray-100">
-
-          {/* LEFT */}
-          <div className="p-10">
-            <h2 className="text-4xl font-bold mb-5">Serving Across Kochi</h2>
-
-            <p className="text-gray-600 leading-relaxed mb-8">
-              From Fort Kochi to Kakkanad, our verified professionals are available in your neighbourhood.
-            </p>
-
-            <div className="grid grid-cols-2 gap-4 text-gray-700 font-medium">
-              <p>✔ Kakkanad</p>
-              <p>✔ Aluva</p>
-              <p>✔ Fort Kochi</p>
-              <p>✔ Kalamassery</p>
-              <p>✔ Edappally</p>
-              <p>✔ Vyttila</p>
-            </div>
-            <div className="flex gap-5 mt-10 flex-wrap">
-              <div className="bg-gray-100 rounded-3xl px-6 py-5 shadow-sm">
-                <h3 className="text-3xl font-bold text-green-700">800+</h3>
-                <p className="text-gray-500">Verified Providers</p>
-              </div>
-
-              <div className="bg-gray-100 rounded-3xl px-6 py-5 shadow-sm">
-                <h3 className="text-3xl font-bold text-green-700">15k+</h3>
-                <p className="text-gray-500">Happy Users</p>
-              </div>
-            </div>
-          </div>
-
-          {/* MAP */}
-          <div className="relative min-h-[400px]">
-            <img
-              src="/map.png"
-              alt="map"
-              className="w-full h-full object-cover"
-            />
-
-            <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
-          </div>
-        </div>
-      </section>
-
-
-      {/* CTA SECTION */}
-      <section className="max-w-7xl mx-auto px-6 md:px-12 pb-20">
-        <div
-          className="relative rounded-[35px] overflow-hidden bg-cover bg-center"
-          style={{ backgroundImage: "url('/background.png')" }}
-        >
-          <div className="absolute inset-0 bg-amber-900/75"></div>
-
-          <div className="relative z-10 px-10 py-14 flex flex-col lg:flex-row items-center justify-between gap-8">
-            <div>
-              <h2 className="text-4xl font-bold text-white leading-tight">
-                Ready to book trusted local services?
-              </h2>
-              <p className="text-amber-100 mt-4 text-lg">
-                Find the right professional for the job — fast and easy.
-              </p>
-            </div>
-
-            <div className="flex gap-4 flex-wrap">
-              <button className="bg-white text-amber-700 px-8 py-4 rounded-2xl font-semibold hover:scale-105 transition-all shadow-xl">
-                Find Services
-              </button>
-
-              <button className="border border-white text-white px-8 py-4 rounded-2xl font-semibold hover:bg-white hover:text-amber-700 transition-all">
-                Join as Provider
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   )
 }

@@ -7,6 +7,7 @@ import Header from './components/Header'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import Footer from './components/Footer'
+import ProviderReg from './provider/ProviderReg'
 
 function App() {
 
@@ -21,7 +22,7 @@ function App() {
 
         <Route path='/user' element={<UserHome />} />
 
-        <Route path='/provider' element={<ProviderHome />} />
+        <Route path='/provider' element={<ProviderReg />} />
 
       </Routes>
       <Footer/>
