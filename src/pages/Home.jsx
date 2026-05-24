@@ -13,7 +13,7 @@ function Home() {
         <p>Find trusted pros</p> <p>in <span className='text-amber-700'>Kochi</span>, instantly</p></div>
       <p className='text-gray-400'>Book electricians, plumbers, tutors and more - with real reviews and live chat. </p>
       <div className="flex gap-4 flex-wrap mt-3">
-              <Link to={'/user'} className="bg-white border-amber-700 text-amber-700 px-8 py-4 rounded-2xl font-semibold hover:scale-105 hover:bg-amber-700 hover:text-white hover:border-white transition-all shadow-xl">
+              <Link to={'/services'} className="bg-white border-amber-700 text-amber-700 px-8 py-4 rounded-2xl font-semibold hover:scale-105 hover:bg-amber-700 hover:text-white hover:border-white transition-all shadow-xl">
                 Find Services
               </Link>
 
