@@ -13,14 +13,14 @@ function Contact() {
 
   const formik = useFormik({
     initialValues: {
-      fullName: "",
+      username: "",
       email: "",
       phone: "",
       location: "",
       message: ""
     },
     validationSchema: Yup.object({
-      fullName: Yup.string()
+      username: Yup.string()
         .min(3, "Minimum 3 characters")
         .required("Full name is required"),
 

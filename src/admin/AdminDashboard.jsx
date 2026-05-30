@@ -1,45 +1,38 @@
-import React, { useState } from 'react'
-import {
-  FaCheck,
-  FaTimes,
-  FaUserShield,
-  FaEye
-} from "react-icons/fa"
+import React, { useEffect, useState } from 'react'
+import { FaCheck, FaTimes, FaUserShield, FaEye } from "react-icons/fa"
+import { approveProvidersAPI, pendingProvidersAPI, rejectProvidersAPI } from '../services/allAPI'
+import toast from "react-hot-toast";
 
 function AdminDashboard() {
 
-  const [providers, setProviders] = useState([
-    {
-      id: 1,
-      name: "Rahul Service",
-      email: "rahul@gmail.com",
-      service: "Electrician",
-      location: "Kochi",
-      status: "pending"
-    },
-    {
-      id: 2,
-      name: "Akhil Plumbing",
-      email: "akhil@gmail.com",
-      service: "Plumber",
-      location: "Edappally",
-      status: "pending"
-    },
-    {
-      id: 3,
-      name: "Nithin Tutor",
-      email: "nithin@gmail.com",
-      service: "Tutor",
-      location: "Kakkanad",
-      status: "approved"
-    }
-  ])
+  const [providers, setProviders] = useState([])
+  const [showModal, setShowModal] = useState(false)
+  const [selectedImage, setSelectedImage] = useState("")
+  useEffect(() => {
+    getPendingProviders()
+  }, [])
 
-  const updateStatus = (id, newStatus) => {
-    const updated = providers.map((item) =>
-      item.id === id ? { ...item, status: newStatus } : item
-    )
-    setProviders(updated)
+  const getPendingProviders = async () => {
+    const result = await pendingProvidersAPI()
+    if (result.status == 200) {
+      setProviders(result.data)
+    }
+  }
+
+  const handleApprove = async (id)=>{
+    const result = await approveProvidersAPI(id)
+    if(result.status==200){
+      toast.success("Provider approved successfully!!!")
+      getPendingProviders()
+    }
+  }
+
+ const handleReject = async (id)=>{
+    const result = await rejectProvidersAPI(id)
+    if(result.status==200){
+      toast.error("Provider rejected!!!")
+      getPendingProviders()
+    }
   }
 
   return (
@@ -72,6 +65,7 @@ function AdminDashboard() {
               <th className="p-4 text-left">Email</th>
               <th className="p-4 text-left">Service</th>
               <th className="p-4 text-left">Location</th>
+              <th className="p-4 text-left">ID</th>
               <th className="p-4 text-left">Status</th>
               <th className="p-4 text-center">Actions</th>
             </tr>
@@ -79,51 +73,39 @@ function AdminDashboard() {
 
           <tbody>
 
-            {
-              providers.map((p) => (
+            {providers?.length > 0 ?
+              providers?.map((provider) => (
 
-                <tr key={p.id} className="border-b hover:bg-gray-50">
+                <tr key={provider?._id} className="border-b hover:bg-gray-50">
 
-                  <td className="p-4 font-semibold">{p.name}</td>
-                  <td className="p-4">{p.email}</td>
-                  <td className="p-4">{p.service}</td>
-                  <td className="p-4">{p.location}</td>
-
-                  {/* Status */}
+                  <td className="p-4 font-semibold">{provider?.username}</td>
+                  <td className="p-4">{provider?.email}</td>
+                  <td className="p-4">{provider?.service}</td>
+                  <td className="p-4">{provider?.location}</td>
                   <td className="p-4">
-                    <span className={`px-3 py-1 rounded-full text-sm font-semibold
-                      ${p.status === "approved"
-                        ? "bg-green-100 text-green-700"
-                        : p.status === "rejected"
-                          ? "bg-red-100 text-red-700"
-                          : "bg-yellow-100 text-yellow-700"
-                      }`}
+                    <button onClick={() => {
+                      setSelectedImage(provider?.identityCard)
+                      setShowModal(true)
+                    }}
+                      className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
                     >
-                      {p.status}
-                    </span>
+                      <FaEye />
+                    </button>
                   </td>
+                  <td className="p-4">{provider?.status}</td>
 
                   {/* Actions */}
                   <td className="p-4">
 
                     <div className="flex justify-center gap-3">
 
-                      <button
-                        onClick={() => alert(JSON.stringify(p))}
-                        className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-                      >
-                        <FaEye />
-                      </button>
 
-                      <button
-                        onClick={() => updateStatus(p.id, "approved")}
-                        className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600"
-                      >
+
+                      <button onClick={()=>handleApprove(provider?._id)} className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600">
                         <FaCheck />
                       </button>
 
-                      <button
-                        onClick={() => updateStatus(p.id, "rejected")}
+                      <button  onClick={()=>handleReject(provider?._id)}
                         className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
                       >
                         <FaTimes />
@@ -136,6 +118,12 @@ function AdminDashboard() {
                 </tr>
 
               ))
+              :
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <p className='m-3 font-bold text-xl'>Loading.....</p></tr>
             }
 
           </tbody>
@@ -143,6 +131,27 @@ function AdminDashboard() {
         </table>
 
       </div>
+      {
+        showModal && (
+          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+
+            <div className="bg-white rounded-2xl p-4 relative w-[90%] max-w-lg">
+
+              {/* Close Button */}
+              <button onClick={() => setShowModal(false)} className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-lg">X</button>
+
+              {/* ID Card Image */}
+              <img
+                src={`${import.meta.env.VITE_BASEURL}/uploads/${selectedImage}`}
+                alt="ID Card"
+                className="w-full h-[500px] object-contain rounded-xl"
+              />
+
+            </div>
+
+          </div>
+        )
+      }
 
     </div>
   )

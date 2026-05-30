@@ -1,217 +1,157 @@
-import React, { useState } from 'react'
-import { FaUserEdit, FaCamera, FaSave } from "react-icons/fa";
+import React, { useEffect, useState } from "react"
+import { FaUserEdit, FaSave } from "react-icons/fa"
+import { editProviderProfile, getProviderDetailsAPI } from "../services/allAPI"
+import { useNavigate, useParams } from 'react-router-dom'
+import toast from "react-hot-toast"
 
 function ProviderProfile() {
-
+  const {id} = useParams()
+  const navigate = useNavigate()
   const [editMode, setEditMode] = useState(false)
 
   const [provider, setProvider] = useState({
-    fullName: "Rahul Service",
-    email: "rahul@gmail.com",
-    phone: "9876543210",
-    location: "Kochi",
-    service: "Electrician",
-    description:
-      "Experienced electrician providing home wiring and repair services.",
-    profileImage: "https://as1.ftcdn.net/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
+    username: "",
+  email: "",
+  phone: "",
+  location: "",
+  service: "",
+  ratePerHour: "",
+  password: "",
+  confirmPassword: "",
+  description: ""
   })
 
-  // image upload
-  const handleImageUpload = (e) => {
+  useEffect(()=>{
+    getProviderDetails(id)
+  },[id])
 
-    const file = e.target.files[0]
+  const getProviderDetails = async (id)=>{
+    const result = await getProviderDetailsAPI(id)
+if (result?.status === 200) {
+    setProvider(result.data)
+  }  }
 
-    if (file) {
-
-      const imageUrl = URL.createObjectURL(file)
-
-      setProvider({
-        ...provider,
-        profileImage: imageUrl
-      })
+  const handleSave = async (id) => {
+    const result = await editProviderProfile(id, provider)
+    if (result.status == 200) {
+      setProvider(result.data)
+      toast.success("Profile updated succesfully!!!")
+      navigate(`/provider/${id}`)
     }
   }
-
-  const handleChange = (e) => {
-    setProvider({
-      ...provider,
-      [e.target.name]: e.target.value
-    })
-  }
-
-  const handleSave = () => {
-    setEditMode(false)
-    alert("Profile Updated Successfully")
-  }
-
   return (
-    <div className="min-h-screen bg-gray-100 flex justify-center items-center p-6">
+    <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
+      <div className="w-full max-w-4xl">
 
-      <div className="w-full max-w-5xl bg-white rounded-[35px] shadow-2xl overflow-hidden">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-amber-500 to-amber-700 text-white p-8 rounded-3xl shadow-xl">
+          <h1 className="text-3xl font-black">
+            {provider?.username}
+          </h1>
 
-        {/* Banner */}
-        <div className="bg-gradient-to-r from-amber-500 to-amber-700 h-56 relative">
+          <p className="mt-2 text-white/90">
+            Provider Profile
+          </p>
 
-          {/* Profile Image */}
-          <div className="absolute -bottom-16 left-10">
-
-            <div className="relative w-36 h-36">
-
-              <img
-                src={provider.profileImage}
-                alt="profile"
-                className="w-36 h-36 rounded-full object-cover border-4 border-white shadow-xl"
-              />
-
-              {/* Upload Button */}
-              {
-                editMode && (
-                  <label className="absolute bottom-2 right-2 bg-black text-white p-3 rounded-full cursor-pointer hover:bg-gray-800 transition-all">
-
-                    <FaCamera />
-
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleImageUpload}
-                    />
-
-                  </label>
-                )
-              }
-
-            </div>
-
-          </div>
-
+          <button
+            onClick={() => editMode ? handleSave(id) : setEditMode(true)}
+            className="mt-6 flex items-center gap-2 bg-white text-amber-600 px-5 py-2 rounded-xl font-semibold hover:scale-105 transition"
+          >
+            {editMode ? (
+              <>
+                <FaSave /> Save Changes
+              </>
+            ) : (
+              <>
+                <FaUserEdit /> Edit Profile
+              </>
+            )}
+          </button>
         </div>
 
-        {/* Content */}
-        <div className="pt-24 px-10 pb-10">
 
-          {/* Header */}
-          <div className="flex flex-col md:flex-row justify-between md:items-center gap-5">
 
-            <div>
-              <h1 className="text-4xl font-black text-gray-800">
-                {provider.fullName}
-              </h1>
+        {/* FORM GRID */}
+        <div className="grid md:grid-cols-2 gap-4 mt-6">
 
-              <p className="text-gray-500 mt-2">
-                Trusted Service Provider
-              </p>
-            </div>
-
-            <button
-              onClick={() =>
-                editMode ? handleSave() : setEditMode(true)
-              }
-              className="flex items-center gap-3 bg-amber-500 hover:bg-amber-600 transition-all duration-300 text-white px-6 py-3 rounded-2xl shadow-lg"
-            >
-              {
-                editMode ?
-                  <>
-                    <FaSave />
-                    Save Profile
-                  </>
-                  :
-                  <>
-                    <FaUserEdit />
-                    Edit Profile
-                  </>
-              }
-            </button>
-
-          </div>
-
-          {/* Form */}
-          <div className="grid md:grid-cols-2 gap-6 mt-10">
-
-            <div>
-              <label className="font-semibold text-gray-700">
-                Full Name
-              </label>
-
-              <input
-                type="text"
-                name="fullName"
-                value={provider.fullName}
-                disabled={!editMode}
-                onChange={handleChange}
-                className="w-full mt-2 border rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-amber-500 disabled:bg-gray-100"
-              />
-            </div>
-
-            <div>
-              <label className="font-semibold text-gray-700">
-                Email
-              </label>
-
-              <input
-                type="email"
-                name="email"
-                value={provider.email}
-                disabled={!editMode}
-                onChange={handleChange}
-                className="w-full mt-2 border rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-amber-500 disabled:bg-gray-100"
-              />
-            </div>
-
-            <div>
-              <label className="font-semibold text-gray-700">
-                Phone
-              </label>
-
-              <input
-                type="text"
-                name="phone"
-                value={provider.phone}
-                disabled={!editMode}
-                onChange={handleChange}
-                className="w-full mt-2 border rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-amber-500 disabled:bg-gray-100"
-              />
-            </div>
-
-            <div>
-              <label className="font-semibold text-gray-700">
-                Location
-              </label>
-
-              <input
-                type="text"
-                name="location"
-                value={provider.location}
-                disabled={!editMode}
-                onChange={handleChange}
-                className="w-full mt-2 border rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-amber-500 disabled:bg-gray-100"
-              />
-            </div>
-
-          </div>
-
-          {/* Description */}
-          <div className="mt-8">
-
-            <label className="font-semibold text-gray-700">
-              About Service
+          <div className="bg-white rounded-2xl p-4 shadow-sm">
+            <label className="text-sm font-semibold text-gray-600">
+              Full Name
             </label>
 
-            <textarea
-              rows="5"
-              name="description"
-              value={provider.description}
-              disabled={!editMode}
-              onChange={handleChange}
-              className="w-full mt-2 border rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-amber-500 disabled:bg-gray-100"
+            <input type="text" name="username" value={provider?.username || ""} disabled={!editMode} onChange={e=>setProvider({...provider,username:e.target.value})} className="w-full mt-2 p-2 border rounded-lg"
             />
+          </div>
+          <div className="bg-white rounded-2xl p-4 shadow-sm">
+            <label className="text-sm font-semibold text-gray-600">
+              Email
+            </label>
 
+            <input type="email" name="email" value={provider?.email || ""} disabled={!editMode} onChange={e=>setProvider({...provider,email:e.target.value})} className="w-full mt-2 p-2 border rounded-lg"
+            />
+          </div>
+          <div className="bg-white rounded-2xl p-4 shadow-sm">
+            <label className="text-sm font-semibold text-gray-600">
+              Phone
+            </label>
+
+            <input type="text" name="phone" value={provider?.phone || ""} disabled={!editMode} onChange={e=>setProvider({...provider,phone:e.target.value})} className="w-full mt-2 p-2 border rounded-lg"
+            />
+          </div>
+          <div className="bg-white rounded-2xl p-4 shadow-sm">
+            <label className="text-sm font-semibold text-gray-600">
+              Location
+            </label>
+
+            <input type="text" name="location" value={provider?.location || ""} disabled={!editMode} onChange={e=>setProvider({...provider,location:e.target.value})} className="w-full mt-2 p-2 border rounded-lg"
+            />
+          </div>
+          <div className="bg-white rounded-2xl p-4 shadow-sm">
+            <label className="text-sm font-semibold text-gray-600">
+              Service
+            </label>
+
+            <input type="text" name="service" value={provider?.service || ""} disabled={!editMode} onChange={e=>setProvider({...provider,service:e.target.value})} className="w-full mt-2 p-2 border rounded-lg"
+            />
+          </div>
+          <div className="bg-white rounded-2xl p-4 shadow-sm">
+            <label className="text-sm font-semibold text-gray-600">
+              Rate Per Hour
+            </label>
+
+            <input type="text" name="ratePerHour" value={provider?.ratePerHour || ""} disabled={!editMode} onChange={e=>setProvider({...provider,ratePerHour:e.target.value})} className="w-full mt-2 p-2 border rounded-lg"
+            />
+          </div>
+          {/* PASSWORD */}
+          <div className="bg-white rounded-2xl p-4 shadow-sm">
+            <label className="text-sm font-semibold text-gray-600">
+              Password
+            </label>
+
+            <input type="password" name="password" value={provider?.password || ""} disabled={!editMode} onChange={e=>setProvider({...provider,password:e.target.value})} className="w-full mt-2 p-2 border rounded-lg"
+            />
           </div>
 
+          {/* CONFIRM PASSWORD */}
+          <div className="bg-white rounded-2xl p-4 shadow-sm">
+            <label className="text-sm font-semibold text-gray-600">
+              Confirm Password
+            </label>
+
+            <input type="password" name="password" value={provider?.confirmPassword || ""} disabled={!editMode} onChange={e=>setProvider({...provider,confirmPassword:e.target.value})} className="w-full mt-2 p-2 border rounded-lg" />
+          </div>
+        </div>
+
+        {/* DESCRIPTION */}
+        <div className="mt-4 bg-white rounded-2xl p-4 shadow-sm">
+          <label className="text-sm font-semibold text-gray-600">
+            About Service
+          </label>
+
+          <textarea name="description" value={provider?.description || ""} disabled={!editMode} onChange={e=>setProvider({...provider,description:e.target.value})} rows="5" className="w-full mt-2 outline-none text-gray-800 disabled:bg-white resize-none" />
         </div>
 
       </div>
-
     </div>
   )
 }
