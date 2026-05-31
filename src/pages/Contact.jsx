@@ -6,7 +6,7 @@ import { FaClock } from "react-icons/fa";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import emailjs from "@emailjs/browser";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 function Contact() {
   const form = useRef(null);
@@ -61,7 +61,7 @@ function Contact() {
   return (
 
     <div className="bg-gray-400 min-h-screen text-gray-800 overflow-hidden">
-      <Toaster />
+      
       {/* contact section */}
       <section className="fixed top-0 left-0 w-full h-screen bg-cover bg-center" style={{ backgroundImage: "url('/kochi.jpg')" }}>
         <div className="absolute inset-0 bg-white/60"></div>
