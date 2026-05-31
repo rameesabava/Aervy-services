@@ -36,7 +36,10 @@ if (result?.status === 200) {
     if (result.status == 200) {
       setProvider(result.data)
       toast.success("Profile updated succesfully!!!")
-      navigate(`/provider/${id}`)
+      setTimeout(()=>{
+                navigate(`/provider/${id}`)
+            },2000)
+      
     }
   }
   return (

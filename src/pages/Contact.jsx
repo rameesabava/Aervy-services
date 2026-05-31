@@ -144,10 +144,10 @@ function Contact() {
             <div className="grid md:grid-cols-2 gap-5">
 
               <div>
-                <input name="fullName" value={formik.values.fullName} onChange={formik.handleChange} onBlur={formik.handleBlur} type="text" placeholder="Full Name" className="w-full bg-gray-100 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-amber-400" />
-                {formik.touched.fullName && formik.errors.fullName && (
+                <input name="username" value={formik.values.username} onChange={formik.handleChange} onBlur={formik.handleBlur} type="text" placeholder="Full Name" className="w-full bg-gray-100 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-amber-400" />
+                {formik.touched.username && formik.errors.username && (
                   <p className="text-red-500 text-sm mt-1">
-                    {formik.errors.fullName}
+                    {formik.errors.username}
                   </p>
 
                 )}

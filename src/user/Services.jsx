@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { FaMapMarkerAlt, FaLock } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom'
 import { getApprovedProvidersAPI } from '../services/allAPI';
 import toast from "react-hot-toast";
+import { searchContext } from '../context API/ShareContext';
 
 function Services() {
 const navigate = useNavigate()
+const {searchKey} = useContext(searchContext)
   const [approvedProviders, setApprovedProviders] = useState([])
   
   
@@ -15,6 +17,11 @@ const navigate = useNavigate()
 useEffect(() => {
     getApprovedProviders()
   }, [])
+
+  const filteredProviders = searchKey?.trim()? approvedProviders.filter((item) =>
+      item.service.toLowerCase().includes(searchKey.toLowerCase())
+    )
+  : approvedProviders;
   
   const getApprovedProviders = async () => {
     const result = await getApprovedProvidersAPI()
@@ -25,6 +32,7 @@ useEffect(() => {
     }
   }
 
+ 
  
 
 
@@ -51,8 +59,9 @@ useEffect(() => {
       {/* Cards */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-14">
 
-        {approvedProviders.length>0?
-          approvedProviders.map((provider) => (
+        {filteredProviders.length>0?
+
+          filteredProviders.map((provider) => (
 
             <div
               key={provider?._id}

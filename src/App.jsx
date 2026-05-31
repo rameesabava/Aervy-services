@@ -18,13 +18,18 @@ import { Toaster } from "react-hot-toast";
 import PaymentSuccess from './user/PaymentSuccess'
 import PaymentFail from './user/PaymentFail'
 import ProviderBookings from './provider/ProviderBookings'
+import { useContext } from 'react'
+import { routeContext } from './context API/RouteGuardContext'
+import PageNotFound from './pages/PageNotFound'
 
 
 function App() {
+    const { role } = useContext(routeContext)
+  
 
   return (
     <>
-     <Toaster position="top-center" reverseOrder={false} />
+     <Toaster position="bottom-center" />
       <Header />
       <Routes>
         <Route path='/' element={<Home />} />
@@ -32,19 +37,29 @@ function App() {
         <Route path='/contact' element={<Contact />} />
         <Route path='/login' element={<Login />} />
         <Route path='/services' element={<Services />} />
-
-        <Route path='/admin' element={<AdminDashboard/>}/>
-        
-        <Route path='/user' element={<UserHome />} />
         <Route path='/register' element={<Register/>}/>
-        <Route path='/provider/view/:id' element={<ViewProvider/>}/>
-        <Route path='/payment-success' element={<PaymentSuccess/>}/>
-        <Route path='/payment-fail' element={<PaymentFail/>}/>
 
-        <Route path='/provider' element={<ProviderReg />} />
-        <Route path='/provider/:id' element={<ProviderDashboard />} />
-        <Route path='/provider-profile/:id' element={<ProviderProfile/>}/>
-        <Route path='/provider/bookings/:id' element={<ProviderBookings/>}/>
+        {role=="admin" && 
+        <Route path='/admin' element={<AdminDashboard/>}/>}
+        
+        {role=="user" &&
+        <>
+          <Route path='/user' element={<UserHome />} />
+          <Route path='/provider/view/:id' element={<ViewProvider/>}/>
+          <Route path='/payment-success' element={<PaymentSuccess/>}/>
+          <Route path='/payment-fail' element={<PaymentFail/>}/>
+        </>
+        }
+
+        {role=="provider" &&
+        <>
+          <Route path='/provider' element={<ProviderReg />} />
+          <Route path='/provider/:id' element={<ProviderDashboard />} />
+          <Route path='/provider-profile/:id' element={<ProviderProfile/>}/>
+          <Route path='/provider/bookings/:id' element={<ProviderBookings/>}/>
+        </>
+        }
+        <Route path='/*' element={<PageNotFound />} />
 
       </Routes>
       <Footer/>

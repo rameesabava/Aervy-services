@@ -106,7 +106,7 @@ const COLORS = ["#22c55e", "#f59e0b"]
         </div>
 
         {/* Cards */}
-        <div className="grid md:grid-cols-2 gap-6 mt-8">
+        <div className="grid md:grid-cols-3 gap-6 mt-8">
 
           <div className="bg-white p-6 rounded-3xl shadow-lg">
             <h3 className="text-gray-500">Service</h3>
@@ -122,7 +122,12 @@ const COLORS = ["#22c55e", "#f59e0b"]
             </p>
           </div>
 
-          
+          <div className="bg-white p-6 rounded-3xl shadow-lg">
+            <h3 className="text-gray-500">Status</h3>
+            <p className="text-3xl font-bold mt-2">
+              {provider?.status}
+            </p>
+          </div>
         </div>
 
         {/* pie chart */}

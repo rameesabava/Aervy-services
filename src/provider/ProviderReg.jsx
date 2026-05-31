@@ -79,13 +79,17 @@ const navigate = useNavigate()
             if(result.status==201){
                 toast.success("Registration Successful!!!")
                 resetForm()
-                
+                setTimeout(()=>{
+                navigate('/login')
+            },2000)
                 
             }else{
                 toast.error(result.response)
-            
+            setTimeout(()=>{
+                navigate('/login')
+            },2000)
             }
-            navigate('/login')
+            
         }
     })
 

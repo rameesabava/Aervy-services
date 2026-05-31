@@ -27,8 +27,11 @@ function ViewProvider() {
     const user = JSON.parse(sessionStorage.getItem("user"))
 
     const reqBody = {
-        providerId: provider._id,
-        userId: user._id
+        userId: user?._id,
+        username: user?.username,
+        providerId: provider?._id,
+        providerName: provider?.username
+        
     }
 
     const token = sessionStorage.getItem("token")

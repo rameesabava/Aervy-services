@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { getProviderBookingsAPI, updateProviderBookingCompleteAPI, updateProviderBookingRejectAPI } from '../services/allAPI'
+import { FaArrowAltCircleLeft } from "react-icons/fa";
+
 function ProviderBookings() {
   const { id } = useParams()
   const [bookingDetails, setBookingDetails] = useState([])
@@ -34,6 +36,7 @@ const handleReject = async (bookingId) => {
 
   return (
     <div>
+      
       {/* Bookings */}
       <div className="bg-white rounded-3xl shadow-lg mt-8 p-6">
 
@@ -105,6 +108,11 @@ const handleReject = async (bookingId) => {
 }
 
       </div>
+       <div className='flex justify-center items-center'>
+         <Link to={`/provider/${id}`} className="bg-amber-600 text-white my-3 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 hover:text-black">
+      <div className='flex items-center gap-3'><FaArrowAltCircleLeft /> Dashboard</div>
+    </Link>
+       </div>
     </div>
   )
 }
