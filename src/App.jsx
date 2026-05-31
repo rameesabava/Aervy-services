@@ -1,7 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
 import Home from './pages/Home'
-import UserHome from './user/UserHome'
 import ViewProvider from './user/ViewProvider'
 import Header from './components/Header'
 import About from './pages/About'
@@ -38,13 +37,13 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/services' element={<Services />} />
         <Route path='/register' element={<Register/>}/>
-
+          <Route path='/provider' element={<ProviderReg />} />
+          
         {role=="admin" && 
         <Route path='/admin' element={<AdminDashboard/>}/>}
         
         {role=="user" &&
         <>
-          <Route path='/user' element={<UserHome />} />
           <Route path='/provider/view/:id' element={<ViewProvider/>}/>
           <Route path='/payment-success' element={<PaymentSuccess/>}/>
           <Route path='/payment-fail' element={<PaymentFail/>}/>
@@ -53,14 +52,12 @@ function App() {
 
         {role=="provider" &&
         <>
-          <Route path='/provider' element={<ProviderReg />} />
           <Route path='/provider/:id' element={<ProviderDashboard />} />
           <Route path='/provider-profile/:id' element={<ProviderProfile/>}/>
           <Route path='/provider/bookings/:id' element={<ProviderBookings/>}/>
         </>
         }
-        <Route path='/*' element={<PageNotFound />} />
-
+        <Route path='/*' element={<PageNotFound/>}/>
       </Routes>
       <Footer/>
     </>

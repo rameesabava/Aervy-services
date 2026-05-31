@@ -56,7 +56,7 @@ function Header() {
 
       {/* search */}
      {
-     role=="user" && <div className="hidden md:flex items-center bg-gray-100 hover:bg-gray-200 transition rounded-full px-3 py-1 shadow-sm focus-within:ring-2 focus-within:ring-amber-400">
+     (!token || role=="user") && <div className="hidden md:flex items-center bg-gray-100 hover:bg-gray-200 transition rounded-full px-3 py-1 shadow-sm focus-within:ring-2 focus-within:ring-amber-400">
         <input onChange={(e)=>setSearchKey(e.target.value)} value={searchKey} type="text" placeholder="Search services..." className="bg-transparent outline-none px-2 text-sm w-40 md:w-64" />
         <button onClick={handleSearch} className="text-gray-600 hover:text-amber-700 transition">
           <FaSearch />

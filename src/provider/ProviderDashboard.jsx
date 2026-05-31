@@ -79,13 +79,6 @@ const COLORS = ["#22c55e", "#f59e0b"]
             <span>Bookings</span>
           </Link>
 
-                              
-
-          <button className="flex items-center gap-4 hover:text-red-500  mt-20">
-            <FaSignOutAlt />
-            <span>Logout</span>
-          </button>
-
         </div>
       </div>
 

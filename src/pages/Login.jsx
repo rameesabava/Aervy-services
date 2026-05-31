@@ -1,20 +1,26 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { loginAPI, providerLoginAPI } from '../services/allAPI'
+import { googleLoginAPI, loginAPI, providerLoginAPI } from '../services/allAPI'
 import toast from 'react-hot-toast'
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from "jwt-decode";
+import { routeContext } from '../context API/RouteGuardContext';
 
 function Login() {
 
   const navigate = useNavigate()
 
   const [role, setRole] = useState("user")
+  const {
+    authorisedUser,
+    setAuthorisedUser,
+    setRole: setContextRole
+  } = useContext(routeContext)
 
   const [userDetails, setUserDetails] = useState({
     email: "",
     password: ""
   })
-
-
 
   const handleLogin = async () => {
     const { email, password } = userDetails
@@ -23,38 +29,62 @@ function Login() {
     } else if (role == "user") {
       const result = await loginAPI(userDetails)
       if (result.status == 200) {
-        toast.success("Login Successful!!!")
-        // console.log(result.data);
 
-        sessionStorage.setItem("token", result?.data?.token)
-        sessionStorage.setItem("user", JSON.stringify(result?.data?.user))
-        const user = JSON.parse(sessionStorage.getItem("user"))
-        if(user?.role=="admin"){
+        sessionStorage.setItem("token", result.data.token)
+        sessionStorage.setItem("user", JSON.stringify(result.data.user))
+
+        setAuthorisedUser(true)
+        setContextRole(result.data.user.role)
+
+        const user = result.data.user
+
+        if (user.role === "admin") {
           navigate("/admin")
-        }else{
-        navigate("/services")
+        } else {
+          navigate("/services")
         }
-
       } else {
         toast.error(result.response)
       }
     } else if (role == "provider") {
       const result = await providerLoginAPI(userDetails)
       if (result.status == 200) {
-        toast.success("Login Successful!!!")
-        // console.log(result.data.user._id);
 
-        const id = result?.data?.user?._id;
-        sessionStorage.setItem("token", result.data.token)
-        sessionStorage.setItem("user", JSON.stringify(result.data.user))
-        navigate(`/provider/${id}`)
+  const id = result.data.user._id
 
-      } else {
+  sessionStorage.setItem("token", result.data.token)
+  sessionStorage.setItem("user", JSON.stringify(result.data.user))
+
+  setAuthorisedUser(true)
+  setContextRole("provider")
+
+  navigate(`/provider/${id}`)
+} else {
         toast.error(result.response)
 
       }
 
     }
+  }
+
+  const handleGoogleLogin = async (credentialResponse) => {
+    console.log("Inside handleGoogleLogin");
+    console.log(credentialResponse);
+    const { email, name, picture } = jwtDecode(credentialResponse.credential)
+    console.log(email, name, picture);
+    // api call
+    const result = await googleLoginAPI({ username: name, email, password: "googlePassword" })
+    if (result.status == 200) {
+
+  sessionStorage.setItem("token", result.data.token)
+  sessionStorage.setItem("user", JSON.stringify(result.data.user))
+
+  setAuthorisedUser(true)
+  setContextRole(result.data.user.role)
+
+  navigate('/services')
+}
+
   }
 
   return (
@@ -89,7 +119,20 @@ function Login() {
           <button onClick={handleLogin} className="w-full bg-amber-500 hover:bg-amber-600 text-white py-4 rounded-2xl font-semibold transition-all duration-300">Login as {role}</button>
 
         </div>
+        {/* google authentication */}
+        <div className='flex justify-center mt-2 items-center'>
+          <GoogleLogin
+            onSuccess={credentialResponse => {
+              handleGoogleLogin(credentialResponse);
 
+
+            }}
+            onError={() => {
+              console.log('Login Failed');
+            }}
+            useOneTap
+          />
+        </div>
         <p className="text-center text-gray-500 mt-6">
           Don't have an account?
           <Link to="/register" className="text-amber-500 font-semibold ms-2">

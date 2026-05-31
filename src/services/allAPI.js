@@ -15,6 +15,11 @@ export const loginAPI = async (userData) => {
     return await apiService("POST", "/login", userData)
 }
 
+// user - google login : : called by login component when google login clicked
+export const googleLoginAPI = async (userData) => {
+    return await apiService("POST", "/google-login", userData)
+}
+
 // provider login : called by login component when login button clicked
 export const providerLoginAPI = async (userData) => {
     return await apiService("POST", "/provider-login", userData)
@@ -73,4 +78,9 @@ export const updateProviderBookingRejectAPI = async (reqBody) => {
 // edit provider profile : called by providerProfile component
 export const editProviderProfile = async (id, reqBody) => {
     return await apiService("PUT", `/profile/${id}`,reqBody)
+}
+
+// get service description AI
+export const getDescriptionAI = async (reqBody) => {
+    return await apiService("POST", `/service-ai`, reqBody)
 }

@@ -4,14 +4,14 @@ import { MdHeadsetMic } from 'react-icons/md'
 import { Link, useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { providerRegisterAPI } from '../services/allAPI'
+import { getDescriptionAI, providerRegisterAPI } from '../services/allAPI'
 import toast from 'react-hot-toast'
 
 function ProviderReg() {
 const navigate = useNavigate()
     const formik = useFormik({
         initialValues: {
-            fullName: "",
+            username: "",
             email: "",
             password: "",
             confirmPassword: "",
@@ -24,7 +24,7 @@ const navigate = useNavigate()
         },
 
         validationSchema: Yup.object({
-            fullName: Yup.string()
+            username: Yup.string()
                 .min(3, "Minimum 3 characters")
                 .required("Full name is required"),
 
@@ -65,7 +65,7 @@ const navigate = useNavigate()
             // console.log(values)
             const reqBody = new FormData()
 
-            reqBody.append("username", values.fullName)
+            reqBody.append("username", values.username)
             reqBody.append("email", values.email)
             reqBody.append("password", values.password)
             reqBody.append("phone", values.phone)
@@ -93,6 +93,30 @@ const navigate = useNavigate()
         }
     })
 
+     const generateDescriptionAI = async () => {
+    try {
+
+        if (!formik.values.service) {
+            toast.error("Please select a service first")
+            return
+        }
+
+        const result = await getDescriptionAI({
+            service: formik.values.service
+        })
+
+        if (result.status === 200) {
+            formik.setFieldValue(
+                "description",
+                result.data.content
+            )
+        }
+
+    } catch (err) {
+        console.log(err)
+        toast.error("Failed to generate description")
+    }
+}
 
     return (
         <div className="min-h-screen bg-cover bg-center flex items-center justify-center px-6 py-20" style={{ backgroundImage: "url('/providerreg.jfif')" }}>
@@ -136,12 +160,12 @@ const navigate = useNavigate()
                     <form className="space-y-5" onSubmit={formik.handleSubmit}>
 
                         <div>
-                            <input name='fullName' value={formik.values.fullName} onChange={formik.handleChange} onBlur={formik.handleBlur} type="text" placeholder="Full Name" className="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 outline-none text-white placeholder:text-gray-300 focus:ring-2 focus:ring-amber-500" />
+                            <input name='username' value={formik.values.username} onChange={formik.handleChange} onBlur={formik.handleBlur} type="text" placeholder="Full Name" className="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 outline-none text-white placeholder:text-gray-300 focus:ring-2 focus:ring-amber-500" />
                             {
-                                formik.touched.fullName &&
-                                formik.errors.fullName && (
+                                formik.touched.username &&
+                                formik.errors.username && (
                                     <p className='text-red-400 text-sm mt-1'>
-                                        {formik.errors.fullName}
+                                        {formik.errors.username}
                                     </p>
                                 )
                             }
@@ -221,8 +245,17 @@ const navigate = useNavigate()
                                 )
                             }
                         </div>
-
+<div className="flex justify-end mb-2">
+    <button
+        type="button"
+        onClick={generateDescriptionAI}
+        className="bg-amber-500 px-4 py-2 rounded-lg text-white"
+    >
+         Generate with AI
+    </button>
+</div>
                         <div>
+
                             <textarea rows="4" name="description" value={formik.values.description} onChange={formik.handleChange} onBlur={formik.handleBlur} placeholder="Tell us about your services..." className="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 outline-none text-white placeholder:text-gray-300 focus:ring-2 focus:ring-amber-500"></textarea>
                             {
                                 formik.touched.description &&

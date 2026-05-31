@@ -6,23 +6,23 @@ import toast from "react-hot-toast";
 import { searchContext } from '../context API/ShareContext';
 
 function Services() {
-const navigate = useNavigate()
-const {searchKey} = useContext(searchContext)
+  const navigate = useNavigate()
+  const { searchKey } = useContext(searchContext)
   const [approvedProviders, setApprovedProviders] = useState([])
-  
-  
+
+
   const token = sessionStorage.getItem("token")
   console.log(token);
-  
-useEffect(() => {
+
+  useEffect(() => {
     getApprovedProviders()
   }, [])
 
-  const filteredProviders = searchKey?.trim()? approvedProviders.filter((item) =>
-      item.service.toLowerCase().includes(searchKey.toLowerCase())
-    )
-  : approvedProviders;
-  
+  const filteredProviders = searchKey?.trim() ? approvedProviders.filter((item) =>
+    item.service.toLowerCase().includes(searchKey.toLowerCase())
+  )
+    : approvedProviders;
+
   const getApprovedProviders = async () => {
     const result = await getApprovedProvidersAPI()
     if (result.status == 200) {
@@ -32,8 +32,8 @@ useEffect(() => {
     }
   }
 
- 
- 
+
+
 
 
   return (
@@ -59,7 +59,7 @@ useEffect(() => {
       {/* Cards */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-14">
 
-        {filteredProviders.length>0?
+        {filteredProviders.length > 0 ?
 
           filteredProviders.map((provider) => (
 
@@ -84,7 +84,7 @@ useEffect(() => {
               {/* Content */}
               <div className="p-6">
 
-               
+
                 {/* Location */}
                 <div className="flex items-center gap-3 text-gray-600 mb-4">
 
@@ -95,14 +95,14 @@ useEffect(() => {
                 </div>
                 <div className="space-y-3 mb-6">
 
-                        <p className="text-gray-700">
-                          <span className="font-bold">
-                            Rate:
-                          </span> {provider?.ratePerHour}/Hr
-                        </p>
+                  <p className="text-gray-700">
+                    <span className="font-bold">
+                      Rate:
+                    </span> {provider?.ratePerHour}/Hr
+                  </p>
 
-                       
-                      </div>
+
+                </div>
 
 
                 {/* Login Restriction */}
@@ -136,19 +136,19 @@ useEffect(() => {
                     <div>
 
                       {/* Visible only after login */}
-                      
+
 
                       {/* Buttons */}
                       <div className="flex gap-4">
 
-                       
+
 
                         <Link
-  to={`/provider/view/${provider?._id}`}
-  className="flex-1 flex items-center justify-center border border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-white transition-all duration-300 py-3 rounded-2xl font-semibold"
->
-  View Details
-</Link>
+                          to={`/provider/view/${provider?._id}`}
+                          className="flex-1 flex items-center justify-center border border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-white transition-all duration-300 py-3 rounded-2xl font-semibold"
+                        >
+                          View Details
+                        </Link>
 
                       </div>
 
