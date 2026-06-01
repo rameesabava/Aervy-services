@@ -20,6 +20,7 @@ import ProviderBookings from './provider/ProviderBookings'
 import { useContext } from 'react'
 import { routeContext } from './context API/RouteGuardContext'
 import PageNotFound from './pages/PageNotFound'
+import UserBookings from './user/UserBookings'
 
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
         {role=="user" &&
         <>
           <Route path='/provider/view/:id' element={<ViewProvider/>}/>
+          <Route path='/user-bookings/:id' element={<UserBookings/>}/>
           <Route path='/payment-success' element={<PaymentSuccess/>}/>
           <Route path='/payment-fail' element={<PaymentFail/>}/>
         </>

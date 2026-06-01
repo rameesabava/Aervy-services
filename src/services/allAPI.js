@@ -65,6 +65,11 @@ export const getProviderBookingsAPI = async (id) => {
     return await apiService("GET", `/provider/bookings/${id}`, {})
 }
 
+// get user bookings : called by userBookings component
+export const getUserBookingsAPI = async (id) => {
+    return await apiService("GET", `/user-bookings/${id}`, {})
+}
+
 // update provider booking status completed : called by providerBookings component
 export const updateProviderBookingCompleteAPI = async (reqBody) => {
     return await apiService("PUT", `/provider/complete-bookings`, reqBody)

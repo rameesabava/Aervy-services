@@ -32,7 +32,8 @@ if (result?.status === 200) {
   }  }
 
   const handleSave = async (id) => {
-    const result = await editProviderProfile(id, provider)
+    if(username && email && phone && location && service && ratePerHour && password && confirmPassword && description){
+const result = await editProviderProfile(id, provider)
     if (result.status == 200) {
       setProvider(result.data)
       toast.success("Profile updated succesfully!!!")
@@ -41,6 +42,10 @@ if (result?.status === 200) {
             },2000)
       
     }
+    }else{
+      toast.error("Please fill all the fields")
+    }
+    
   }
   return (
     <div className="min-h-screen bg-gray-100 p-6 flex justify-center">

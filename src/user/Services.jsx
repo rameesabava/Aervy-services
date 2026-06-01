@@ -10,6 +10,7 @@ function Services() {
   const { searchKey } = useContext(searchContext)
   const [approvedProviders, setApprovedProviders] = useState([])
 
+const user = JSON.parse(sessionStorage.getItem("user"))
 
   const token = sessionStorage.getItem("token")
   console.log(token);
@@ -38,7 +39,7 @@ function Services() {
 
   return (
     <div className="min-h-screen bg-gray-100 px-6 py-10">
-
+<Link to={`/user-bookings/${user._id}`} className="bg-amber-500 text-white px-4 py-2 rounded-lg text-right">My Bookings</Link>
       {/* Heading */}
       <div className="text-center">
 
