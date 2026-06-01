@@ -22,7 +22,7 @@ function ProviderBookings() {
   const result = await updateProviderBookingCompleteAPI({ id: bookingId })
 
   if (result.status === 200) {
-    getBookings(id) // provider id from useParams
+    getBookings(id) 
   }
 }
 
@@ -60,7 +60,11 @@ const handleReject = async (bookingId) => {
               Customer: {booking?.username}
             </p>
           </div>
-
+<div>
+            <p className="text-gray-500">
+              Customer: {booking?.userPhone}
+            </p>
+          </div>
          <div className="flex items-center gap-3">
 
   <span

@@ -29,6 +29,7 @@ function ViewProvider() {
     const reqBody = {
         userId: user?._id,
         username: user?.username,
+        userPhone:user?.phone,
         providerId: provider?._id,
         providerName: provider?.username
         
