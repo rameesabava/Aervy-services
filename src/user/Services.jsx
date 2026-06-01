@@ -10,7 +10,7 @@ function Services() {
   const { searchKey } = useContext(searchContext)
   const [approvedProviders, setApprovedProviders] = useState([])
 
-const user = JSON.parse(sessionStorage.getItem("user"))
+const user = JSON.parse(sessionStorage.getItem("user") || "null")
 
   const token = sessionStorage.getItem("token")
   console.log(token);
@@ -33,14 +33,19 @@ const user = JSON.parse(sessionStorage.getItem("user"))
     }
   }
 
-
-
-
-
   return (
     <div className="min-h-screen bg-gray-100 px-6 py-10">
-<Link to={`/user-bookings/${user._id}`} className="bg-amber-500 text-white px-4 py-2 rounded-lg text-right">My Bookings</Link>
-      {/* Heading */}
+{token && user && (
+  <div className="flex justify-end mb-5">
+    <Link
+      to={`/user-bookings/${user._id}`}
+      className="bg-amber-500 text-white px-4 py-2 rounded-lg"
+    >
+      My Bookings
+    </Link>
+  </div>
+)}      
+{/* Heading */}
       <div className="text-center">
 
         <p className="text-amber-500 font-bold text-xl">
@@ -141,9 +146,6 @@ const user = JSON.parse(sessionStorage.getItem("user"))
 
                       {/* Buttons */}
                       <div className="flex gap-4">
-
-
-
                         <Link
                           to={`/provider/view/${provider?._id}`}
                           className="flex-1 flex items-center justify-center border border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-white transition-all duration-300 py-3 rounded-2xl font-semibold"
