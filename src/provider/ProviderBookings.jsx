@@ -53,7 +53,7 @@ const handleReject = async (bookingId) => {
     bookingDetails.map((booking) => (
       <div key={booking._id} className="space-y-4 mb-3">
 
-        <div className="border rounded-2xl p-4 flex justify-between items-center">
+        <div className="border rounded-2xl p-4 flex-col justify-between items-center">
 
           <div>
             <p className="text-gray-500">
@@ -62,7 +62,7 @@ const handleReject = async (bookingId) => {
           </div>
 <div>
             <p className="text-gray-500">
-              Customer: {booking?.userPhone}
+              Phone: {booking?.userPhone}
             </p>
           </div>
          <div className="flex items-center gap-3">
