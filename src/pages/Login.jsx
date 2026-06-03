@@ -11,11 +11,7 @@ function Login() {
   const navigate = useNavigate()
 
   const [role, setRole] = useState("user")
-  const {
-    authorisedUser,
-    setAuthorisedUser,
-    setRole: setContextRole
-  } = useContext(routeContext)
+  const { authorisedUser, setAuthorisedUser, setRole: setContextRole } = useContext(routeContext)
 
   const [userDetails, setUserDetails] = useState({
     email: "",
@@ -50,16 +46,16 @@ function Login() {
       const result = await providerLoginAPI(userDetails)
       if (result.status == 200) {
 
-  const id = result.data.user._id
+        const id = result.data.user._id
 
-  sessionStorage.setItem("token", result.data.token)
-  sessionStorage.setItem("user", JSON.stringify(result.data.user))
+        sessionStorage.setItem("token", result.data.token)
+        sessionStorage.setItem("user", JSON.stringify(result.data.user))
 
-  setAuthorisedUser(true)
-  setContextRole("provider")
+        setAuthorisedUser(true)
+        setContextRole("provider")
 
-  navigate(`/provider/${id}`)
-} else {
+        navigate(`/provider/${id}`)
+      } else {
         toast.error(result.response)
 
       }
@@ -76,14 +72,14 @@ function Login() {
     const result = await googleLoginAPI({ username: name, email, password: "googlePassword" })
     if (result.status == 200) {
 
-  sessionStorage.setItem("token", result.data.token)
-  sessionStorage.setItem("user", JSON.stringify(result.data.user))
+      sessionStorage.setItem("token", result.data.token)
+      sessionStorage.setItem("user", JSON.stringify(result.data.user))
 
-  setAuthorisedUser(true)
-  setContextRole(result.data.user.role)
+      setAuthorisedUser(true)
+      setContextRole(result.data.user.role)
 
-  navigate('/services')
-}
+      navigate('/services')
+    }
 
   }
 
@@ -135,7 +131,10 @@ function Login() {
         </div>
         <p className="text-center text-gray-500 mt-6">
           Don't have an account?
-          <Link to="/register" className="text-amber-500 font-semibold ms-2">
+          <Link
+            to={role === "user" ? "/register" : "/provider"}
+            className="text-amber-500 font-semibold ms-2"
+          >
             Register
           </Link>
         </p>
