@@ -75,10 +75,6 @@ export const updateProviderBookingCompleteAPI = async (reqBody) => {
     return await apiService("PUT", `/provider/complete-bookings`, reqBody)
 }
 
-// update provider booking status rejected : called by providerBookings component
-export const updateProviderBookingRejectAPI = async (reqBody) => {
-    return await apiService("PUT", `/provider/reject-bookings`, reqBody)
-}
 
 // edit provider profile : called by providerProfile component
 export const editProviderProfile = async (id, reqBody) => {
